@@ -13,9 +13,8 @@ CREATE TABLE department (
 CREATE TABLE role (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(30) NOT NULL,
-  salary DECIMAL(10,4) NOT NULL, 
-  department_id INT NOT NULL,
-  FOREIGN KEY (department_id) REFERENCES department(id)
+  salary DECIMAL(8,2) NOT NULL, 
+  department_id INT NOT NULL
 );
 
 -- Employee Table -- 
@@ -24,21 +23,16 @@ CREATE TABLE employee (
   first_name VARCHAR(30) NOT NULL,
   last_name VARCHAR(30) NOT NULL, 
   role_id INT NOT NULL, 
-  manager_id INT NULL,
-  FOREIGN KEY (role_id) REFERENCES role(id),
-  FOREIGN KEY (manager_id) REFERENCES employee(id)
+  manager_id INT NULL
 );
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("John", "Doe", 2, 1), ("Mike", "Chan", 3, 1), ("Ashley", "Rodden", 1, NULL);
-
-INSERT INTO role (title, salary, department_id)
-VALUES ("Sales Lead", 100000, 1), ("Salesperson", 80000, 1), ("Lead Engineer", 150000, 2);
+VALUES ("John", "Doe", 1, Null), ("Mike", "Chan", 2, Null), ("Ashley", "Rodden", 3, Null);
 
 INSERT INTO department (departmentName)
 VALUES ("Sales"), ("Engineering"), ("Fiance"), ("Legal"); 
 
--- Creating Tables in My SQL --
-SELECT * FROM department;
-SELECT * FROM role;
+INSERT INTO role (title, salary, department_id)
+VALUES ("Sales Lead", 100000, 1), ("Salesperson", 80000, 1), ("Lead Engineer", 150000, 2);
+
 SELECT * FROM employee

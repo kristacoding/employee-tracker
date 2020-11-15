@@ -1,6 +1,6 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-const cTable = require("console.table");
+const consoleTable = require(console.table);
 
 // create the connection information for the sql database
 var connection = mysql.createConnection({
@@ -13,13 +13,14 @@ var connection = mysql.createConnection({
     user: "root",
 
     // Your password
-    password: "ILv3OC8!",
+    password: "ILV3Oc8!",
     database: "employeeTracker_DB"
 });
 
 connection.connect(function (err) {
     if (err) throw err;
     // run the start function after the connection is made to prompt the user
+    console.log("Connected");
     start();
 });
 
@@ -32,7 +33,6 @@ function start() {
             choices: [
                 "View All Employees",
                 "View All Employees By Department",
-                "View All Employees By Manager",
                 "View All Roles",
                 "View All Departments",
                 "Add a Department",
@@ -52,8 +52,8 @@ function start() {
                     allEmployeesDepartment();
                     break;
 
-                case "View All Employees By Manager":
-                    allEmployeesManager();
+                case "View All Employees By Role":
+                    allEmployeesRoles();
                     break;
 
                 case "View All Roles":
@@ -61,23 +61,23 @@ function start() {
                     break;
 
                 case "View All Departments":
-                    allRoles();
+                    allDepartments();
                     break;
 
                 case "Add a Department":
-                    allRoles();
+                    addDepartment();
                     break;
 
                 case "Add a Role":
-                    allRoles();
+                    addRoles();
                     break;
 
                 case "Add an Employee":
-                    allRoles();
+                    addEmployee();
                     break;
 
                 case "Update an Employee's Role":
-                    allRoles();
+                    updateEmployee();
                     break;
             
                 case "Complete":
@@ -87,9 +87,19 @@ function start() {
         });
 }
 
-
+// not correct
 function allEmployees() {
-    var query = "SELECT employee";
+    var query = "SELECT employee.first_name, employee.last_name, role.title, role.salary, department.departmentName FROM employee INNER JOIN role on role_id = employee.role_id INNER JOIN department on departmentName = role.department_id";
+    connection.query(query, function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        start();
+    });
+};
+
+// works 
+function allEmployeesDepartment() {
+    var query = "SELECT employee.first_name, employee.last_name, departmentName AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id";
     connection.query(query, function (err, res) {
         if (err) throw err;
         console.table(res);
@@ -97,95 +107,39 @@ function allEmployees() {
     });
 }
 
-function artistSearch() {
-    inquirer
-        .prompt({
-            name: "artist",
-            type: "input",
-            message: "What artist would you like to search for?"
-        })
-        .then(function (answer) {
-            var query = "SELECT position, song, year FROM top5000 WHERE ?";
-            connection.query(query, { artist: answer.artist }, function (err, res) {
-                if (err) throw err;
-                for (var i = 0; i < res.length; i++) {
-                    console.log("Position: " + res[i].position + " || Song: " + res[i].song + " || Year: " + res[i].year);
-                }
-                runSearch();
-            });
-        });
+// works in my sql bench 
+function allEmployeesRoles() {
+    var query = "SELECT employee.first_name, employee.last_name, role.title AS Title FROM employee JOIN role ON employee.role_id = role.id";
+    connection.query(query, function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        start();
+    });
 }
 
-function rangeSearch() {
-    inquirer
-        .prompt([
-            {
-                name: "start",
-                type: "input",
-                message: "Enter starting position: ",
-                validate: function (value) {
-                    if (isNaN(value) === false) {
-                        return true;
-                    }
-                    return false;
-                }
-            },
-            {
-                name: "end",
-                type: "input",
-                message: "Enter ending position: ",
-                validate: function (value) {
-                    if (isNaN(value) === false) {
-                        return true;
-                    }
-                    return false;
-                }
-            }
-        ])
-        .then(function (answer) {
-            var query = "SELECT position,song,artist,year FROM top5000 WHERE position BETWEEN ? AND ?";
-            connection.query(query, [answer.start, answer.end], function (err, res) {
-                if (err) throw err;
-                for (var i = 0; i < res.length; i++) {
-                    console.log(
-                        "Position: " +
-                        res[i].position +
-                        " || Song: " +
-                        res[i].song +
-                        " || Artist: " +
-                        res[i].artist +
-                        " || Year: " +
-                        res[i].year
-                    );
-                }
-                runSearch();
-            });
-        });
+function allRoles() {
+    var query = "SELECT title, salary FROM role";
+    connection.query(query, function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        start();
+    });
+};
+
+function allDepartments() {
+    var query = "SELECT departmentName FROM department";
+    connection.query(query, function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        start();
+    });
 }
 
-function songSearch() {
-    inquirer
-        .prompt({
-            name: "song",
-            type: "input",
-            message: "What song would you like to look for?"
-        })
-        .then(function (answer) {
-            console.log(answer.song);
-            connection.query("SELECT * FROM top5000 WHERE ?", { song: answer.song }, function (err, res) {
-                if (err) throw err;
-                console.log(
-                    "Position: " +
-                    res[0].position +
-                    " || Song: " +
-                    res[0].song +
-                    " || Artist: " +
-                    res[0].artist +
-                    " || Year: " +
-                    res[0].year
-                );
-                runSearch();
-            });
-        });
+function addDepartment() {
+    var query = "SELECT departmentName FROM department";
+    connection.query(query, function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        start();
+    });
 }
-
