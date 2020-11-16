@@ -1,6 +1,6 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-const consoleTable = require(console.table);
+//const consoleTable = require(console.table);
 
 // create the connection information for the sql database
 var connection = mysql.createConnection({
@@ -13,7 +13,7 @@ var connection = mysql.createConnection({
     user: "root",
 
     // Your password
-    password: "",
+    password: "ILv3Oc8!",
     database: "employeeTracker_DB"
 });
 
@@ -69,7 +69,7 @@ function start() {
                     break;
 
                 case "Add a Role":
-                    addRoles();
+                    addRole();
                     break;
 
                 case "Add an Employee":
@@ -79,7 +79,7 @@ function start() {
                 case "Update an Employee's Role":
                     updateEmployee();
                     break;
-            
+
                 case "Complete":
                     connection.end();
                     break;
@@ -89,7 +89,7 @@ function start() {
 
 // not correct
 function allEmployees() {
-    var query = "SELECT employee.first_name, employee.last_name, role.title, role.salary, department.departmentName FROM employee INNER JOIN role on role_id = employee.role_id INNER JOIN department on departmentName = role.department_id";
+    var query = "SELECT employee.id, employee.first_name, employee.last_name, role.title, departmentName AS department, role.salary FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id";
     connection.query(query, function (err, res) {
         if (err) throw err;
         console.table(res);
@@ -97,7 +97,7 @@ function allEmployees() {
     });
 };
 
-// works 
+// works in my sql bench 
 function allEmployeesDepartment() {
     var query = "SELECT employee.first_name, employee.last_name, departmentName AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id";
     connection.query(query, function (err, res) {
@@ -136,10 +136,89 @@ function allDepartments() {
 }
 
 function addDepartment() {
-    var query = "SELECT departmentName FROM department";
-    connection.query(query, function (err, res) {
-        if (err) throw err;
-        console.table(res);
-        start();
-    });
-}
+    inquirer
+        .prompt({
+            name: "newDept",
+            type: "input",
+            message: "What department would you like to add?",
+        })
+        .then(function(answer){
+            console.log(answer.newDept);
+            connection.query( "INSERT INTO department SET ?",
+            {
+                departmentName: answer.newDept,
+            },
+            function (err, res){
+                if (err) throw err;
+                start();
+            })
+        })
+        
+};
+
+function addRole() {
+    inquirer
+        .prompt([
+            {
+            name: "newRole",
+            type: "input",
+            message: "What role would you like to add?",
+        },
+        {
+            name: "newSalary",
+            type: "input",
+            message: "What is the Salary for the new role?",
+        }
+    ])
+        .then(function(answer){
+            console.log(answer.newRole);
+            console.log(answer.newSalary);
+            connection.query( "INSERT INTO role SET ?",
+            {
+                title: answer.newRole,
+                salary: answer.newSalary,
+            },
+            function (err, res){
+                if (err) throw err;
+                start();
+            })
+        })
+        
+};
+
+function addEmployee() {
+    inquirer
+        .prompt([
+            {
+            name: "newFirstName",
+            type: "input",
+            message: "What is your new Employee's first name?",
+        },
+        {
+            name: "newLastName",
+            type: "input",
+            message: "What is your new Employee's last name?",
+        },
+        {   
+            name: "newRoleID",
+            type: "input",
+            message: "What is your new Employee's role ID?"
+        }
+    ])
+    .then(function(answer){
+        console.log(answer.newFirstName);
+        console.log(answer.newLastName);
+        console.log(answer.newRoleID)
+        connection.query( "INSERT INTO employee SET ?",
+        {
+            first_name: answer.newFirstName,
+            last_name: answer.newLastName,
+            role_id: answer.newRoleID
+        },
+        function (err, res){
+            if (err) throw err;
+            start();
+        })
+    })
+};
+
