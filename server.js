@@ -150,6 +150,7 @@ function addDepartment() {
             },
             function (err, res){
                 if (err) throw err;
+                console.log("New Department has been added")
                 start();
             })
         })
@@ -180,6 +181,7 @@ function addRole() {
             },
             function (err, res){
                 if (err) throw err;
+                console.log("New Role has been added")
                 start();
             })
         })
@@ -217,8 +219,45 @@ function addEmployee() {
         },
         function (err, res){
             if (err) throw err;
+            console.log("Employee has been added")
             start();
         })
     })
 };
 
+function updateEmployee() {
+    inquirer
+        .prompt([
+            {
+            name: "updateFN",
+            type: "input",
+            message: "What is the first name of the Employee you want to update?",
+        },
+        {
+            name: "updateLN",
+            type: "input",
+            message: "What is the first name of the Employee you want to update?",
+        },
+        {   
+            name: "updateRoleID",
+            type: "input",
+            message: "What is your Employee's updated role ID?"
+        }
+    ])
+    .then(function(answer){
+        console.log(answer.updateFN);
+        console.log(answer.updateLN);
+        console.log(answer.updateRoleID)
+        connection.query( "UPDATE employee SET WHERE ?",
+        {
+            first_name: answer.updateFN,
+            last_name: answer.updateLN,
+            role_id: answer.updateRoleID
+        },
+        function (err, res){
+            if (err) throw err;
+            console.log("Employee has been updated")
+            start();
+        })
+    })
+};

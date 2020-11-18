@@ -23,11 +23,10 @@ CREATE TABLE employee (
   first_name VARCHAR(30) NOT NULL,
   last_name VARCHAR(30) NOT NULL, 
   role_id INT NOT NULL, 
-  manager_id INT NULL
 );
 
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("John", "Doe", 1, Null), ("Mike", "Chan", 2, Null), ("Ashley", "Rodden", 3, Null);
+INSERT INTO employee (first_name, last_name, role_id)
+VALUES ("John", "Doe", 1), ("Mike", "Chan", 2), ("Ashley", "Rodden", 3);
 
 INSERT INTO department (departmentName)
 VALUES ("Sales"), ("Engineering"), ("Fiance"), ("Legal"); 
