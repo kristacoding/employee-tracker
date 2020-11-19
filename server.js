@@ -142,122 +142,120 @@ function addDepartment() {
             type: "input",
             message: "What department would you like to add?",
         })
-        .then(function(answer){
+        .then(function (answer) {
             console.log(answer.newDept);
-            connection.query( "INSERT INTO department SET ?",
-            {
-                departmentName: answer.newDept,
-            },
-            function (err, res){
-                if (err) throw err;
-                console.log("New Department has been added")
-                start();
-            })
+            connection.query("INSERT INTO department SET ?",
+                {
+                    departmentName: answer.newDept,
+                },
+                function (err, res) {
+                    if (err) throw err;
+                    console.log("New Department has been added")
+                    start();
+                })
         })
-        
+
 };
 
 function addRole() {
     inquirer
         .prompt([
             {
-            name: "newRole",
-            type: "input",
-            message: "What role would you like to add?",
-        },
-        {
-            name: "newSalary",
-            type: "input",
-            message: "What is the Salary for the new role?",
-        }
-    ])
-        .then(function(answer){
+                name: "newRole",
+                type: "input",
+                message: "What role would you like to add?",
+            },
+            {
+                name: "newSalary",
+                type: "input",
+                message: "What is the Salary for the new role?",
+            }
+        ])
+        .then(function (answer) {
             console.log(answer.newRole);
             console.log(answer.newSalary);
-            connection.query( "INSERT INTO role SET ?",
-            {
-                title: answer.newRole,
-                salary: answer.newSalary,
-            },
-            function (err, res){
-                if (err) throw err;
-                console.log("New Role has been added")
-                start();
-            })
+            connection.query("INSERT INTO role SET ?",
+                {
+                    title: answer.newRole,
+                    salary: answer.newSalary,
+                },
+                function (err, res) {
+                    if (err) throw err;
+                    console.log("New Role has been added")
+                    start();
+                })
         })
-        
+
 };
 
 function addEmployee() {
     inquirer
         .prompt([
             {
-            name: "newFirstName",
-            type: "input",
-            message: "What is your new Employee's first name?",
-        },
-        {
-            name: "newLastName",
-            type: "input",
-            message: "What is your new Employee's last name?",
-        },
-        {   
-            name: "newRoleID",
-            type: "input",
-            message: "What is your new Employee's role ID?"
-        }
-    ])
-    .then(function(answer){
-        console.log(answer.newFirstName);
-        console.log(answer.newLastName);
-        console.log(answer.newRoleID)
-        connection.query( "INSERT INTO employee SET ?",
-        {
-            first_name: answer.newFirstName,
-            last_name: answer.newLastName,
-            role_id: answer.newRoleID
-        },
-        function (err, res){
-            if (err) throw err;
-            console.log("Employee has been added")
-            start();
+                name: "newFirstName",
+                type: "input",
+                message: "What is your new Employee's first name?",
+            },
+            {
+                name: "newLastName",
+                type: "input",
+                message: "What is your new Employee's last name?",
+            },
+            {
+                name: "newRoleID",
+                type: "input",
+                message: "What is your new Employee's role ID?"
+            }
+        ])
+        .then(function (answer) {
+            console.log(answer.newFirstName);
+            console.log(answer.newLastName);
+            console.log(answer.newRoleID)
+            connection.query("INSERT INTO employee SET ?",
+                {
+                    first_name: answer.newFirstName,
+                    last_name: answer.newLastName,
+                    role_id: answer.newRoleID
+                },
+                function (err, res) {
+                    if (err) throw err;
+                    console.log("Employee has been added")
+                    start();
+                })
         })
-    })
 };
 
-function updateEmployee() {
-    inquirer
-        .prompt([
-            {
-            name: "updateFN",
-            type: "input",
-            message: "What is the first name of the Employee you want to update?",
-        },
-        {
-            name: "updateLN",
-            type: "input",
-            message: "What is the first name of the Employee you want to update?",
-        },
-        {   
-            name: "updateRoleID",
-            type: "input",
-            message: "What is your Employee's updated role ID?"
-        }
-    ])
-    .then(function(answer){
-        console.log(answer.updateFN);
-        console.log(answer.updateLN);
-        console.log(answer.updateRoleID)
-        connection.query( "UPDATE employee SET WHERE ?",
-        {
-            first_name: answer.updateFN,
-            last_name: answer.updateLN,
-            role_id: answer.updateRoleID
-        },
-        function (err, res){
-            if (err) throw err;
-            console.log("Employee has been updated")
-            start();
-        })
-    })
-};
+//function updateEmployee() {
+    //inquirer
+//         .prompt([
+//             {
+//                 name: "updateFirstName",
+//                 type: "input",
+//                 message: "What is your Employee's first name?",
+//             },
+//             {
+//                 name: "updateRoleID",
+//                 type: "input",
+//                 message: "What is your Employee's new role ID?"
+//             }
+//         ])
+//         .then(function (answer) {
+//             console.log(answer.updateFirstName);
+//             console.log(answer.updateRoleID);
+//             connection.query("UPDATE employees SET ? WHERE ?",
+//             [
+//                 {
+//                 role_id: answer.updateRoleID
+//                 },
+//                 {
+//                 first_name: answer.updateFirstName,
+//             }
+//             ],
+//                 function (err, res) {
+//                     if (err) throw err;
+//                     console.log("Role has been updated")
+//                     start();
+//                 }
+//             )
+//         });
+// }
